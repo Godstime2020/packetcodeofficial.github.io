@@ -6,11 +6,13 @@ const allClearButton = document.querySelector('[data-all-clear]')
 const previousOperandTextElement = document.querySelector('[data-previous-operand]')
 const currentOperandTextElement = document.querySelector('[data-current-operand]')
 
+
 class Calculator {
   constructor(previousOperandTextElement, currentOperandTextElement) {
     this.previousOperandTextElement = previousOperandTextElement
     this.currentOperandTextElement = currentOperandTextElement
     this.clear()
+  
   }
 
   clear() {
@@ -24,18 +26,26 @@ class Calculator {
   }
 
   appendNumber(number) {
+  if(this.currentOperand=== this.computation){this.currentOperand = number.toString()}else{
     if(number==="." && this.currentOperand.includes(".")) return
   this.currentOperand = this.currentOperand.toString() + number.toString()
   }
-
+  }
   chooseOperation(operation) {
-        if(this.currentOperand==="") return
+        if(this.currentOperand==="" && operation ==="-"){this.appendNumber("-")}
+        else{
+          if(this.currentOperand==="" && operation !== '-') return
         if(this.previousOperand !== ""){
             this.compute()
         }
+       
+        
         this.operation = operation
         this.previousOperand = this.currentOperand
-        this.currentOperand = ""
+        this.currentOperand =''
+        
+        }
+        
     }
 
   compute() {
@@ -60,8 +70,8 @@ class Calculator {
           default:
           return
         }
-
-        this.currentOperand = computation
+        this.computation = computation
+        this.currentOperand = this.computation
         this.operation = undefined
 
         this.previousOperand = ""
@@ -72,9 +82,12 @@ getDisplayNumber(number) {
     const integerDigits = parseFloat(stringNumber.split('.')[0])
     const decimalDigits = stringNumber.split('.')[1]
     let integerDisplay
+
     if (isNaN(integerDigits)) {
       integerDisplay = ''
-    } else {
+    }
+   
+     else {
       integerDisplay = integerDigits.toLocaleString('en' , { maximumFractionDigits: 0 })
     }
     if (decimalDigits != null) {
@@ -83,6 +96,7 @@ getDisplayNumber(number) {
       return integerDisplay
     }
   }
+
 
   updateDisplay() {
     this.currentOperandTextElement.innerText =
@@ -112,6 +126,9 @@ operationButtons.forEach(button => {
       calculator.updateDisplay()
     })
   })
+
+  
+  
 
   equalsButton.addEventListener('click', button =>{
       calculator.compute()
